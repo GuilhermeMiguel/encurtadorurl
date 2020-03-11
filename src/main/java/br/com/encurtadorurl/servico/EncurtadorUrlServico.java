@@ -26,27 +26,21 @@ public class EncurtadorUrlServico {
 		Map<String, String> armazenaUrl = new HashMap<>(); 
 		
 		try {
-			if(leArquivo(url)) {
-				urlVO.setUrl(armazenaUrl.get(url));
+			String recuperaArquivo = leArquivo(url);
+			
+			if(recuperaArquivo != null) {
+				urlVO.setUrl(recuperaArquivo.split("- ")[0].trim());
 			}
 			else {
 				armazenaUrl.put(url, compressUrl(url));	
 				armazenaArquivo(armazenaUrl);
+				urlVO.setUrl("Gravada - " + url);
 			}
 		} catch (IOException e) {
 			urlVO.setUrl(armazenaUrl.get(url));
-			
-			return urlVO;
 		}
 				
-//		 byte[] r = "".getBytes();
-		
-//		byte n = 
-//		for (byte teste : r) {
-//			
 //		}
-		
-		urlVO.setUrl(armazenaUrl.get(url));
 		
 		return urlVO;
 	}
@@ -56,24 +50,33 @@ public class EncurtadorUrlServico {
 		return url.replace("http://", "#8")
 				.replace("www.", "%$")
 				.replace(".com.br", "@#");
+		
+		
+//		 byte[] r = "".getBytes();
+		
+//		byte n = 
+//		for (byte teste : r) {
+//	
     }
 	
 	public void armazenaArquivo(Map<String, String> urls) throws IOException {
-		FileWriter arq = new FileWriter("C:\\Users\\global.guilherme\\Documents\\Guilherme\\GIT\\encurtadorurl\\grava-url.txt");
+		FileWriter arq = new FileWriter("C:\\Users\\global.guilherme\\Documents\\Guilherme\\GIT\\encurtadorurl\\grava-url.txt", true);
 	    PrintWriter gravarArq = new PrintWriter(arq);
 	 
-	 urls.entrySet().forEach(x -> gravarArq.write(x.getKey() + " - " + x.getValue()));
+	    urls.entrySet().forEach(x -> gravarArq.write(x.getKey() + " - " + x.getValue()));
+	 
+	    gravarArq.close();
 	}
 	
-	private boolean leArquivo(String url) throws IOException {
+	private String leArquivo(String url) throws IOException {
 		
 		BufferedReader reader = new BufferedReader (new FileReader(new File("C:\\Users\\global.guilherme\\Documents\\Guilherme\\GIT\\encurtadorurl\\grava-url.txt")));
 		String linha;	
 		while ((linha = reader.readLine()) != null) {
 		       if(linha.contains(url)){
-		         return true;          
+		         return linha;          
 		       } 
 		}
-		return false;
+		return null;
 	}
 }
