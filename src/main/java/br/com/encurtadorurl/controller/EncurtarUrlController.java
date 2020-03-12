@@ -25,9 +25,9 @@ public class EncurtarUrlController {
 	
 	@GetMapping(produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public ResponseEntity<UrlVO> RespostaEncurtarUrl(@RequestParam(required = false) String url) {
+	public ResponseEntity<UrlVO> RespostaTrabalharComUrl(@RequestParam(required = false) String url) {
 		
-		UrlVO urlEncurtada = encurtadorUrlFacade.encurtarUrl(url);
+		UrlVO urlEncurtada = encurtadorUrlFacade.trabalhaComUrl(url);
 		
 		if(urlEncurtada == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);			

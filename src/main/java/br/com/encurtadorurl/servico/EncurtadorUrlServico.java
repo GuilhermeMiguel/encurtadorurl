@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,43 +31,77 @@ public class EncurtadorUrlServico {
 			else {
 				armazenaUrl.put(url, compressUrl(url));	
 				armazenaArquivo(armazenaUrl);
-				urlVO.setUrl("Gravada - " + url);
+				urlVO.setUrl("Gravada - " + url + " -- Encurtada - " + compressUrl(url));
 			}
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			urlVO.setUrl(armazenaUrl.get(url));
 		}
-				
-//		}
 		
 		return urlVO;
 	}
 	
+	
+	public UrlVO retornarUrl(String url) {
+		
+		UrlVO urlVO = new UrlVO();
+		
+		urlVO.setUrl(url + " - " + descompressUrl(url));
+		return urlVO;
+	}
+
+
 	public String compressUrl(String url) {
        
-		return url.replace("http://", "#8")
-				.replace("www.", "%$")
-				.replace(".com.br", "@#");
+		return url.replace("http://", "#+")
+				.replace("https://", "#*")
+				.replace("www.", "#$")
+				.replace(".com.br", "#@")
+				.replace(".com", "#!");
+    }
+	
+	public String descompressUrl(String url) {
 		
+		return url.replace("#+", "http://")
+				.replace("#*", "https://")
+				.replace("#$", "www.")
+				.replace("#@", ".com.br")
+				.replace("#!", ".com");
+	}
+	
+	public String compressUrl2(String url) {
+	       
+		String out = "";
+		int sum = 1;
+		for (int i = 0; i < url.length() - 1; i++) {
+			if(url.charAt(i) == url.charAt(i+1)) {
+				sum++;
+			} else {
+				out = out + url.charAt(i) + sum;
+				sum = 1;
+			}
+		}
+		out = out + url.charAt(url.length() - 1) + sum;
 		
-//		 byte[] r = "".getBytes();
+		return out.length() < url.length() ? out : url;
 		
-//		byte n = 
-//		for (byte teste : r) {
-//	
     }
 	
 	public void armazenaArquivo(Map<String, String> urls) throws IOException {
-		FileWriter arq = new FileWriter("C:\\Users\\global.guilherme\\Documents\\Guilherme\\GIT\\encurtadorurl\\grava-url.txt", true);
+		
+		FileWriter arq = new FileWriter("grava-url.txt", true);
 	    PrintWriter gravarArq = new PrintWriter(arq);
 	 
-	    urls.entrySet().forEach(x -> gravarArq.write(x.getKey() + " - " + x.getValue()));
+	    urls.entrySet().forEach(x -> gravarArq.write(x.getKey() + " - " + x.getValue()+ "\n"));
 	 
 	    gravarArq.close();
 	}
 	
+	
+	@SuppressWarnings("resource") //Suprime esses alerts do eclipse 
 	private String leArquivo(String url) throws IOException {
 		
-		BufferedReader reader = new BufferedReader (new FileReader(new File("C:\\Users\\global.guilherme\\Documents\\Guilherme\\GIT\\encurtadorurl\\grava-url.txt")));
+		BufferedReader reader = new BufferedReader (new FileReader(new File("grava-url.txt").getCanonicalPath()));
 		String linha;	
 		while ((linha = reader.readLine()) != null) {
 		       if(linha.contains(url)){

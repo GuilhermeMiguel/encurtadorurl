@@ -12,7 +12,11 @@ public class EncurtadorUrlFacade {
 	@Autowired
 	private EncurtadorUrlServico encurtadorUrlService;
 	
-	public UrlVO encurtarUrl(String url) {
+	public UrlVO trabalhaComUrl(String url) {
+		
+		if(url.contains("#+") || url.contains("#*") || url.contains("#$") || url.contains("#@") || url.contains("#!")){
+			return encurtadorUrlService.retornarUrl(url);
+		}
 		
 		return encurtadorUrlService.encurtarUrl(url);
 	}
